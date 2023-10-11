@@ -2,5 +2,10 @@
   "C_Cpp.intelliSenseEngine": "default",
   "idf.portWin": "COM4",
   "idf.flashType": "UART",
-  "idf.adapterTargetName": "esp32"
+  "idf.adapterTargetName": "esp32",
+  "files.associations": {
+    "*.go": "go",
+    "freertos.h": "c",
+    "freertosconfig.h": "c"
+  }
 }
