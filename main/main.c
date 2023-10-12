@@ -4,13 +4,14 @@
 #include "esp_system.h"
 #include "driver/gpio.h"
 #include "esp_timer.h"
+#include "sdkconfig.h"
 
 #define NORMAL_STATE 1
 #define PRESSED_STATE 0
 
 
 int button_is_pressed = 0;
-int button_is_hold = 0;
+int button_is_held = 0;
 
 int KeyReg0 = NORMAL_STATE;
 int KeyReg1 = NORMAL_STATE;
@@ -36,10 +37,10 @@ void getKeyInput(){
             if (TimeOutForKeyPress == 0){
                 if (KeyReg0 == NORMAL_STATE){
         		    KeyReg3 = KeyReg0;
-        		    button_is_hold = 0;
+        		    button_is_held = 0;
         	    }
                 else
-                    button_is_hold = 1;
+                    button_is_held = 1;
                 TimeOutForKeyPress = 100;
             }
         }
@@ -49,29 +50,29 @@ void getKeyInput(){
 void button_call_back_func(void* param){
     getKeyInput();
 }
-void Cyclic_Task ()
+void Cyclic_Task (void* parameter)
 {
     
     while(1)
     {
-        printf("ID: 2013231\n");
+        printf("ID: 2013231 - 2013332. Time: %lld s\n",esp_timer_get_time() / 1000000);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
     vTaskDelete( NULL) ;
 }
-void Uncyclic_Task ()
+void Uncyclic_Task (void* parameter)
 {
     esp_rom_gpio_pad_select_gpio ( GPIO_NUM_17 ) ;
     gpio_set_direction ( GPIO_NUM_17 , GPIO_MODE_INPUT ) ;
     while(1)
     { 
         if (button_is_hold == 1){
-            printf("Button is being hold\n");
+            printf("Button is being held\n");
             vTaskDelay(200 / portTICK_PERIOD_MS);
         }
         else if (button_is_pressed == 1){
             button_is_pressed = 0;
-            printf("ESP\n");
+            printf("ESP32\n");
             vTaskDelay(200 / portTICK_PERIOD_MS);
         }
     }
